@@ -1,7 +1,13 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
-import { render, content, paths, pages } from '../.prerender/entry-server.js'
+import {
+  render,
+  content,
+  paths,
+  pages,
+  moduleIds,
+} from '../.prerender/entry-server.js'
 
 const siteUrl = new URL(process.env.SITE_URL || 'https://buchonean2.com')
 if (
@@ -53,6 +59,7 @@ function documentFor(locale, page, found = true) {
             description: metadata.description,
             inLanguage: locale,
             isPartOf: { '@id': `${origin}/#website` },
+            ...(page === 'home' ? { about: { '@id': `${origin}/#app` } } : {}),
             ...(page === 'faq'
               ? {
                   mainEntity: c.questions.map(({ q, a }) => ({
@@ -63,6 +70,41 @@ function documentFor(locale, page, found = true) {
                 }
               : {}),
           },
+          // Describes the app without offers, ratings or download URLs: none
+          // exist yet.
+          ...(page === 'home'
+            ? [
+                {
+                  '@type': 'MobileApplication',
+                  '@id': `${origin}/#app`,
+                  name: 'Buchonean2',
+                  description: metadata.description,
+                  applicationCategory: 'LifestyleApplication',
+                  operatingSystem: 'iOS, Android',
+                  inLanguage: ['es', 'en'],
+                  image: `${origin}/assets/images/buchonean2-logo-256.webp`,
+                  featureList: moduleIds.map((id) => c.modules[id].name),
+                },
+              ]
+            : [
+                {
+                  '@type': 'BreadcrumbList',
+                  itemListElement: [
+                    {
+                      '@type': 'ListItem',
+                      position: 1,
+                      name: c.nav.home,
+                      item: `${origin}${paths[locale].home}`,
+                    },
+                    {
+                      '@type': 'ListItem',
+                      position: 2,
+                      name: c.nav[page],
+                      item: canonical,
+                    },
+                  ],
+                },
+              ]),
         ],
       }
     : undefined
@@ -120,19 +162,19 @@ for (const locale of ['es', 'en']) {
   }
   await writeFile(`dist/${locale}/404.html`, documentFor(locale, 'home', false))
   const lines = content[locale].hero.lines
-  const background = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#101e18"/><path d="M64 177H490M64 575H1136" stroke="#809e8a"/><g font-family="Arial,sans-serif" fill="#f2f3ec"><text x="166" y="119" font-size="28" font-weight="bold">BUCHONEAN2</text>${lines.map((line, i) => `<text x="64" y="${260 + i * 76}" font-size="53" font-weight="bold">${escape(line)}</text>`).join('')}<text x="64" y="535" font-size="23">${escape(content[locale].soon)}</text></g></svg>`
-  const photo = await sharp('public/assets/source/palomean2_image1.jpg')
-    .resize(600, 384, { fit: 'inside' })
+  const background = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#f1f4ee"/><rect x="600" width="600" height="630" fill="#0e3b2b"/><g font-family="Arial,sans-serif" fill="#13261d"><text x="160" y="112" font-size="34" font-weight="bold">Buchonean2</text>${lines.map((line, i) => `<text x="64" y="${270 + i * 78}" font-size="62" font-weight="bold">${escape(line)}</text>`).join('')}<text x="64" y="560" font-size="22" fill="#17694a">${escape(content[locale].hero.status)}</text></g></svg>`
+  const photo = await sharp('public/assets/source/buchonean2_buchon.png')
+    .resize(600, 630, { fit: 'cover', position: 'right' })
     .toBuffer()
   const logo = await sharp('public/assets/source/Buchonean2_logo.png')
     .resize(80, 80)
     .toBuffer()
   await sharp(Buffer.from(background))
     .composite([
-      { input: photo, left: 550, top: 132 },
-      { input: logo, left: 64, top: 62 },
+      { input: photo, left: 600, top: 0 },
+      { input: logo, left: 64, top: 52 },
     ])
-    .jpeg({ quality: 86, mozjpeg: true })
+    .jpeg({ quality: 84, mozjpeg: true })
     .toFile(`dist/social-${locale}.jpg`)
 }
 await writeFile('dist/404.html', documentFor('es', 'home', false))

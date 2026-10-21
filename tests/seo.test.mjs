@@ -3,7 +3,13 @@ import assert from 'node:assert/strict'
 import { readFile, stat } from 'node:fs/promises'
 import { load } from 'cheerio'
 import sharp from 'sharp'
-import { paths, pages, content } from '../.prerender/entry-server.js'
+import {
+  paths,
+  pages,
+  content,
+  moduleIds,
+  anchors,
+} from '../.prerender/entry-server.js'
 
 const origin = new URL(process.env.SITE_URL || 'https://buchonean2.com').origin
 const titles = new Set()
@@ -57,8 +63,9 @@ for (const locale of ['es', 'en']) {
         )
       }
       for (const a of $('a[href^="/"]').toArray()) {
-        const href = $(a).attr('href')
-        await stat(`dist${href}index.html`)
+        const [href, hash] = $(a).attr('href').split('#')
+        const target = await readFile(`dist${href}index.html`, 'utf8')
+        if (hash) assert.ok(target.includes(`id="${hash}"`), `#${hash} exists`)
       }
       assert.ok(!html.includes('<!--app-html-->'))
     })
@@ -104,7 +111,11 @@ test('Cloudflare static routing, headers and image budget', async () => {
 })
 
 test('official source assets survive a clean build and delivery images are optimized', async () => {
-  for (const file of ['palomean2_image1.jpg', 'Buchonean2_logo.png']) {
+  for (const file of [
+    'palomean2_image1.jpg',
+    'Buchonean2_logo.png',
+    'buchonean2_buchon.png',
+  ]) {
     assert.deepEqual(
       await readFile(`public/assets/source/${file}`),
       await readFile(`dist/assets/source/${file}`),
@@ -112,6 +123,11 @@ test('official source assets survive a clean build and delivery images are optim
   }
   for (const width of [480, 768, 1024]) {
     const file = `dist/assets/images/palomean-flight-${width}.avif`
+    assert.equal((await sharp(file).metadata()).width, width)
+    assert.ok((await stat(file)).size < 100_000)
+  }
+  for (const width of [640, 960, 1350]) {
+    const file = `dist/assets/images/buchon-${width}.avif`
     assert.equal((await sharp(file).metadata()).width, width)
     assert.ok((await stat(file)).size < 100_000)
   }
@@ -123,8 +139,71 @@ test('official source assets survive a clean build and delivery images are optim
   assert.equal(hero.attr('fetchpriority'), 'high')
   assert.equal(hero.attr('loading'), 'eager')
   assert.ok(hero.attr('alt').length > 30)
-  assert.equal(hero.attr('width'), '1024')
-  assert.equal(hero.attr('height'), '654')
+  assert.equal(hero.attr('width'), '1350')
+  assert.equal(hero.attr('height'), '1165')
+  assert.ok(hero.attr('alt').includes('buchón'))
   assert.equal($('.hero-visual source[type="image/avif"]').length, 1)
   assert.ok($('.brand img').first().attr('src').includes('buchonean2-logo'))
+})
+
+test('features page presents all twelve modules with status; home links each one', async () => {
+  for (const locale of ['es', 'en']) {
+    const $ = load(
+      await readFile(`dist${paths[locale].features}index.html`, 'utf8'),
+    )
+    assert.equal($('section.module').length, moduleIds.length)
+    for (const id of moduleIds) {
+      const section = $(`#${anchors[locale][id]}`)
+      assert.equal(section.length, 1, `${locale} ${id}`)
+      assert.equal(section.find('h2').text(), content[locale].modules[id].name)
+      assert.equal(section.find('.status').length, 1)
+      assert.ok(section.find('.points li').length >= 3)
+    }
+    const home = load(
+      await readFile(`dist${paths[locale].home}index.html`, 'utf8'),
+    )
+    for (const id of moduleIds)
+      assert.equal(
+        home(
+          `.module-index a[href="${paths[locale].features}#${anchors[locale][id]}"]`,
+        ).length,
+        1,
+      )
+    const graph = JSON.parse(home('script[type="application/ld+json"]').text())[
+      '@graph'
+    ]
+    const app = graph.find((node) => node['@type'] === 'MobileApplication')
+    assert.ok(app)
+    assert.equal(app.offers, undefined)
+    assert.equal(app.aggregateRating, undefined)
+    assert.equal(app.downloadUrl, undefined)
+  }
+})
+
+test('app screens are always shown in the shared iPhone mockup with responsive images', async () => {
+  for (const locale of ['es', 'en']) {
+    for (const page of ['home', 'features', 'community']) {
+      const $ = load(
+        await readFile(`dist${paths[locale][page]}index.html`, 'utf8'),
+      )
+      assert.ok($('.phone').length > 0, `${locale}/${page} shows the app`)
+      assert.equal($('img[src*="/screens/"]').length, $('.phone img').length)
+      $('.phone').each((_, phone) => {
+        const img = $(phone).find('img')
+        assert.equal($(phone).find('.phone-status').length, 1)
+        assert.equal($(phone).find('source[type="image/avif"]').length, 1)
+        assert.ok(
+          img.attr('srcset').includes('w,') || img.attr('srcset').endsWith('w'),
+        )
+        assert.ok(img.attr('sizes'))
+        assert.ok(
+          Number(img.attr('width')) > 0 && Number(img.attr('height')) > 0,
+        )
+        assert.ok(img.attr('alt').length > 40)
+      })
+      $('.app-showcase').each((_, figure) =>
+        assert.ok($(figure).find('figcaption').text().length > 20),
+      )
+    }
+  }
 })

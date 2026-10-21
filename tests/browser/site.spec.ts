@@ -170,7 +170,7 @@ test('hero images load and navigation supports keyboard dismissal', async ({
   await page.goto('/es/')
   const photo = page.locator('.hero-visual img')
   await expect(photo).toBeVisible()
-  await expect(photo).toHaveAttribute('alt', /Paloma/)
+  await expect(photo).toHaveAttribute('alt', /buchón/)
   expect(
     await photo.evaluate(
       (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
