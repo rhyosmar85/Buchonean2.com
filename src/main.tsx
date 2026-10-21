@@ -6,8 +6,7 @@ import { createI18n } from './i18n'
 import { resolveRoute } from './content'
 import '@fontsource/dm-sans/latin-400.css'
 import '@fontsource/dm-sans/latin-500.css'
-import '@fontsource/dm-sans/latin-600.css'
-import '@fontsource/dm-sans/latin-700.css'
+import '@fontsource/barlow-condensed/latin-700.css'
 import './styles.css'
 
 const route = resolveRoute(

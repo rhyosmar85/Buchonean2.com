@@ -1,73 +1,58 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ArrowUpRight,
-  ArrowRight,
-  Menu,
-  X,
-  UsersRound,
-  Sprout,
-  MessageCircle,
-  Heart,
-  Compass,
-  CircleHelp,
-  Plus,
-  Smartphone,
-} from 'lucide-react'
+import { ArrowUpRight, ArrowRight, Menu, X, Plus } from 'lucide-react'
 import { content, paths, pages, type Locale, type Page } from './content'
 
 type Props = { locale: Locale; page: Page; found: boolean }
 
-function ConnectionArt({ compact = false }: { compact?: boolean }) {
+function Brand({ href }: { href: string }) {
   return (
-    <svg
-      className={compact ? 'connection-art compact' : 'connection-art'}
-      viewBox="0 0 540 520"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle
-        cx="270"
-        cy="260"
-        r="205"
-        stroke="currentColor"
-        strokeOpacity=".2"
+    <a className="brand" href={href} aria-label="Buchonean2">
+      <img
+        src="/assets/images/buchonean2-logo-64.webp"
+        srcSet="/assets/images/buchonean2-logo-64.webp 1x, /assets/images/buchonean2-logo-128.webp 2x"
+        width="48"
+        height="48"
+        alt=""
       />
-      <circle
-        cx="270"
-        cy="260"
-        r="147"
-        stroke="currentColor"
-        strokeOpacity=".2"
+      <span>
+        BUCHONEAN<span className="brand-number">2</span>
+      </span>
+    </a>
+  )
+}
+
+function PigeonPhoto({
+  locale,
+  priority = false,
+}: {
+  locale: Locale
+  priority?: boolean
+}) {
+  const sizes =
+    '(max-width: 760px) calc(100vw - 40px), (max-width: 1200px) 54vw, 690px'
+  return (
+    <picture className="pigeon-photo">
+      <source
+        type="image/avif"
+        srcSet="/assets/images/palomean-flight-480.avif 480w, /assets/images/palomean-flight-768.avif 768w, /assets/images/palomean-flight-1024.avif 1024w"
+        sizes={sizes}
       />
-      <path
-        d="M70 268C160 133 352 113 467 235M89 368C175 431 373 397 454 300"
-        stroke="currentColor"
-        strokeOpacity=".3"
-        strokeDasharray="5 8"
+      <source
+        type="image/webp"
+        srcSet="/assets/images/palomean-flight-480.webp 480w, /assets/images/palomean-flight-768.webp 768w, /assets/images/palomean-flight-1024.webp 1024w"
+        sizes={sizes}
       />
-      <path
-        d="M266 357C164 341 111 273 132 218C153 164 222 170 268 246C306 151 372 140 406 183C452 243 369 328 266 357Z"
-        fill="#d9efbd"
+      <img
+        src="/assets/images/palomean-flight-1024.webp"
+        width="1024"
+        height="654"
+        alt={content[locale].hero.photoAlt}
+        fetchPriority={priority ? 'high' : 'auto'}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
       />
-      <path
-        d="M267 355C281 296 286 238 348 198M267 355C239 287 204 241 161 216"
-        stroke="#125c41"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <circle cx="114" cy="126" r="40" fill="#fff" />
-      <circle cx="114" cy="117" r="10" fill="#79a787" />
-      <path d="M94 148C94 124 134 124 134 148" fill="#79a787" />
-      <circle cx="431" cy="355" r="46" fill="#e5eddf" />
-      <circle cx="431" cy="344" r="12" fill="#125c41" />
-      <path d="M408 379C408 350 454 350 454 379" fill="#125c41" />
-      <circle cx="150" cy="420" r="29" fill="#d9efbd" />
-      <path d="M138 420H162M150 408V432" stroke="#125c41" strokeWidth="2" />
-      <circle cx="383" cy="97" r="8" fill="#d9efbd" />
-      <circle cx="71" cy="319" r="5" fill="#d9efbd" />
-      <path d="M302 79V97M293 88H311" stroke="currentColor" strokeWidth="2" />
-    </svg>
+    </picture>
   )
 }
 
@@ -142,15 +127,7 @@ export default function App({ locale, page, found }: Props) {
       </a>
       <header className="site-header">
         <div className="container header-inner">
-          <a
-            className="wordmark"
-            href={links.home}
-            aria-label="Buchonean2"
-            title={c.footer.brand}
-          >
-            buchonean<span>2</span>
-            <span className="brand-dot" aria-hidden="true" />
-          </a>
+          <Brand href={links.home} />
           <nav
             className="desktop-nav"
             aria-label={
@@ -240,35 +217,48 @@ export default function App({ locale, page, found }: Props) {
           </section>
         ) : page === 'home' ? (
           <>
-            <section className="container hero">
-              <div className="hero-copy">
-                <span className="status-pill">
-                  <span />
-                  {c.soon}
-                </span>
-                <h1>{c.hero.title}</h1>
-                <p>{c.hero.body}</p>
-                <a className="button primary" href={links.community}>
-                  {c.discover}
-                  <ArrowUpRight size={19} />
-                </a>
-                <div className="hero-note">
-                  <span className="tiny-line" />
-                  {c.hero.tag}
+            <section className="hero-section">
+              <div className="container hero">
+                <div className="hero-heading">
+                  <p className="hero-kicker">
+                    <img
+                      src="/assets/images/buchonean2-logo-128.webp"
+                      width="48"
+                      height="48"
+                      alt={c.footer.brand}
+                    />
+                    <span>{c.hero.tag}</span>
+                  </p>
+                  <h1>
+                    {c.hero.lines.map((line) => (
+                      <span key={line}>{line}</span>
+                    ))}
+                  </h1>
+                </div>
+                <figure className="hero-visual">
+                  <PigeonPhoto locale={locale} priority />
+                  <figcaption>
+                    <span>{c.hero.caption}</span>
+                    <span>{c.hero.captionSmall}</span>
+                  </figcaption>
+                </figure>
+                <div className="hero-copy">
+                  <p>{c.hero.body}</p>
+                  <div className="hero-actions">
+                    <a className="button primary" href={links.features}>
+                      {c.explore}
+                      <ArrowUpRight size={19} aria-hidden="true" />
+                    </a>
+                    <span className="launch-note">
+                      <span />
+                      {c.soon}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="hero-visual">
-                <div className="art-top">
-                  <span>buchonean2</span>
-                  <span className="art-symbol" aria-hidden="true">
-                    ✳
-                  </span>
-                </div>
-                <ConnectionArt />
-                <div className="art-bottom">
-                  <p>{c.hero.caption}</p>
-                  <span>{c.hero.captionSmall}</span>
-                </div>
+              <div className="hero-signature container">
+                <span>{c.hero.signature}</span>
+                <span>{c.hero.signatureEnd}</span>
               </div>
             </section>
             <section className="container section intro">
@@ -278,12 +268,8 @@ export default function App({ locale, page, found }: Props) {
               </div>
               <div className="grid md:grid-cols-3 gap-8 pillar-grid">
                 {c.pillars.map((item, i) => {
-                  const Icon = [UsersRound, Sprout, CircleHelp][i]
                   return (
                     <article className="pillar" key={item.title}>
-                      <div className="icon-box">
-                        <Icon size={25} />
-                      </div>
                       <h3>{item.title}</h3>
                       <p>{item.body}</p>
                       <a
@@ -302,9 +288,16 @@ export default function App({ locale, page, found }: Props) {
             </section>
             <section className="community-band">
               <div className="container community-inner">
-                <div className="community-mark" aria-hidden="true">
-                  <UsersRound strokeWidth={1} />
-                  <span className="orbit-dot" />
+                <div className="community-emblem">
+                  <img
+                    src="/assets/images/buchonean2-logo-256.webp"
+                    width="256"
+                    height="256"
+                    alt={c.footer.brand}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <p>{c.communityTeaser.emblem}</p>
                 </div>
                 <div>
                   <h2>{c.communityTeaser.title}</h2>
@@ -318,9 +311,6 @@ export default function App({ locale, page, found }: Props) {
             </section>
             <section className="container section home-faq">
               <div>
-                <span className="icon-box">
-                  <MessageCircle size={24} />
-                </span>
                 <h2>{c.faqTitle}</h2>
                 <a className="text-link" href={links.faq}>
                   {c.allFaq}
@@ -340,9 +330,6 @@ export default function App({ locale, page, found }: Props) {
             {page === 'features' && (
               <section className="container feature-section section-bottom">
                 <div className="feature-intro">
-                  <span className="icon-box">
-                    <Smartphone size={28} />
-                  </span>
                   <h2>{c.features.heading}</h2>
                   <p>{c.features.body}</p>
                 </div>
@@ -360,17 +347,13 @@ export default function App({ locale, page, found }: Props) {
             {page === 'community' && (
               <section className="container section-bottom">
                 <div className="community-page-art">
-                  <ConnectionArt compact />
+                  <PigeonPhoto locale={locale} priority />
                   <h2>{c.community.heading}</h2>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8 values-grid">
-                  {c.community.values.map((value, i) => {
-                    const Icon = [Heart, Compass, UsersRound][i]
+                  {c.community.values.map((value) => {
                     return (
                       <article className="pillar" key={value.title}>
-                        <span className="icon-box">
-                          <Icon size={25} />
-                        </span>
                         <h3>{value.title}</h3>
                         <p>{value.body}</p>
                       </article>
@@ -391,9 +374,6 @@ export default function App({ locale, page, found }: Props) {
             {page === 'support' && (
               <section className="container support-grid section-bottom">
                 <article className="support-panel">
-                  <span className="icon-box">
-                    <MessageCircle size={26} />
-                  </span>
                   <h2>{c.support.heading}</h2>
                   <p>{c.support.body}</p>
                   <a className="text-link" href={links.faq}>
@@ -414,7 +394,7 @@ export default function App({ locale, page, found }: Props) {
           </>
         )}
         {found && (
-          <section className="availability">
+          <section className="availability" id="availability">
             <div className="container availability-inner">
               <div>
                 <h2>{c.availability.title}</h2>
@@ -431,10 +411,7 @@ export default function App({ locale, page, found }: Props) {
       <footer className="container site-footer">
         <div className="footer-top">
           <div>
-            <a className="wordmark" href={links.home} title={c.footer.brand}>
-              buchonean<span>2</span>
-              <span className="brand-dot" aria-hidden="true" />
-            </a>
+            <Brand href={links.home} />
             <p>{c.footer.line}</p>
           </div>
           <nav aria-label={locale === 'es' ? 'Pie de página' : 'Footer'}>

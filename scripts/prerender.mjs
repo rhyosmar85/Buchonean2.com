@@ -92,14 +92,15 @@ function documentFor(locale, page, found = true) {
     <meta property="og:locale" content="${locale === 'es' ? 'es_ES' : 'en_US'}" />
     <meta property="og:locale:alternate" content="${locale === 'es' ? 'en_US' : 'es_ES'}" />
     ${found ? `<meta property="og:url" content="${escape(canonical)}" />` : ''}
-    <meta property="og:image" content="${escape(origin)}/social-${locale}.png" />
+    <meta property="og:image" content="${escape(origin)}/social-${locale}.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="${escape('Buchonean2. ' + c.footer.line)}" />
+    <meta property="og:image:alt" content="${escape('Buchonean2. ' + c.footer.line + ' ' + c.hero.photoAlt)}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${escape(metadata.title)}" />
     <meta name="twitter:description" content="${escape(metadata.description)}" />
-    <meta name="twitter:image" content="${escape(origin)}/social-${locale}.png" />
+    <meta name="twitter:image" content="${escape(origin)}/social-${locale}.jpg" />
     ${json ? `<script type="application/ld+json">${json}</script>` : ''}`
   return template
     .replace('<html lang="es">', `<html lang="${locale}">`)
@@ -118,14 +119,21 @@ for (const locale of ['es', 'en']) {
     )
   }
   await writeFile(`dist/${locale}/404.html`, documentFor(locale, 'home', false))
-  const tagline =
-    locale === 'es'
-      ? ['Una comunidad.', 'Un nuevo capítulo.']
-      : ['One community.', 'A new chapter.']
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#125c41"/><circle cx="1030" cy="300" r="270" fill="none" stroke="#8baa79"/><circle cx="1030" cy="300" r="190" fill="none" stroke="#8baa79"/><path d="M980 440C780 360 850 220 975 330C1040 150 1220 250 980 440Z" fill="#d9efbd"/><g font-family="DejaVu Sans,sans-serif" fill="#edfadf"><text x="75" y="110" font-size="36" font-weight="bold">buchonean2</text><text x="75" y="285" font-size="64">${tagline[0]}</text><text x="75" y="370" font-size="64">${tagline[1]}</text><text x="75" y="535" font-size="24">${content[locale].soon}</text></g></svg>`
-  await sharp(Buffer.from(svg))
-    .png({ compressionLevel: 9 })
-    .toFile(`dist/social-${locale}.png`)
+  const lines = content[locale].hero.lines
+  const background = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#101e18"/><path d="M64 177H490M64 575H1136" stroke="#809e8a"/><g font-family="Arial,sans-serif" fill="#f2f3ec"><text x="166" y="119" font-size="28" font-weight="bold">BUCHONEAN2</text>${lines.map((line, i) => `<text x="64" y="${260 + i * 76}" font-size="53" font-weight="bold">${escape(line)}</text>`).join('')}<text x="64" y="535" font-size="23">${escape(content[locale].soon)}</text></g></svg>`
+  const photo = await sharp('public/assets/source/palomean2_image1.jpg')
+    .resize(600, 384, { fit: 'inside' })
+    .toBuffer()
+  const logo = await sharp('public/assets/source/Buchonean2_logo.png')
+    .resize(80, 80)
+    .toBuffer()
+  await sharp(Buffer.from(background))
+    .composite([
+      { input: photo, left: 550, top: 132 },
+      { input: logo, left: 64, top: 62 },
+    ])
+    .jpeg({ quality: 86, mozjpeg: true })
+    .toFile(`dist/social-${locale}.jpg`)
 }
 await writeFile('dist/404.html', documentFor('es', 'home', false))
 await writeFile('dist/index.html', documentFor('es', 'home'))

@@ -36,7 +36,7 @@ The Cloudflare preview runs locally at `http://127.0.0.1:8787`. It verifies actu
 
 `npm run build` typechecks, bundles the client and server renderer, then generates complete HTML for all ten URLs. Each has a unique title and description, absolute canonical URL, reciprocal ES/EN/x-default alternates, Open Graph/Twitter metadata and WebSite/WebPage structured data. The FAQ page also has FAQPage data matching its visible content; this does not guarantee a search rich result. No ratings, prices, launch dates or app download URLs are fabricated.
 
-`scripts/prerender.mjs` generates `dist/sitemap.xml`, `dist/robots.txt`, localized social PNGs, the root fallback and three noindex 404 documents. The script adds hashes for its JSON-LD to the generated Content Security Policy. `.prerender/` is a private build intermediate and is never included in the public asset directory.
+`scripts/prerender.mjs` generates `dist/sitemap.xml`, `dist/robots.txt`, localized social JPEGs, the root fallback and three noindex 404 documents. The script adds hashes for its JSON-LD to the generated Content Security Policy. `.prerender/` is a private build intermediate and is never included in the public asset directory.
 
 The canonical origin defaults to `https://buchonean2.com`. Override it at build time if needed:
 
@@ -50,13 +50,13 @@ Cloudflare serves `/` as a temporary 302 redirect to `/es/`, normalizes trailing
 
 ## Design and performance
 
-Mobile-first layout, always-visible ES/EN navigation, native FAQ disclosures, keyboard focus styles, skip link, reduced-motion support and self-hosted DM Sans with font-display swap. Concept artwork is inline SVG with a reserved aspect ratio; no external image, font, analytics or tracking requests are needed. Shared build assets have immutable cache headers. Store badges are non-interactive and explicitly say Coming soon / Próximamente.
+Palomero Premium uses deep emerald, charcoal, restrained metallic accents, self-hosted Barlow Condensed headings and DM Sans body text. The mobile hero places the real pigeon photograph directly after the headline. The official emblem appears in navigation, the hero, community section, footer, favicons and social artwork. There are no invented app screens or illustrations.
 
-The supplied brief did not contain an official logo or confirmed product specifications. A temporary text wordmark and `B` favicon are used; the footer identifies the development identity and content. The green palette is provisional. The community illustration is an abstract original concept, not a screenshot or official brand asset. Before a separately authorized publication:
+Both originals are preserved without alterations in `public/assets/source/`: `palomean2_image1.jpg` and `Buchonean2_logo.png`. `scripts/prepare-assets.mjs` generates responsive 480/768/1024px AVIF and WebP photographs, 64/128/256px WebP logos and PNG favicons. It runs automatically before `npm run dev` and `npm run build`, so deleting `dist/` never deletes source assets. The photo keeps its original framing and color, with localized descriptive alt text and explicit dimensions. The hero image loads eagerly at high priority; secondary images load lazily. All assets and fonts are served locally.
 
-- Replace the temporary wordmark/favicon and update social artwork with the official approved brand assets.
-- Validate the bilingual draft copy and feature/compatibility facts.
-- Supply verified support and store links when available; keep stores marked coming soon until then.
+ES/EN remains visible on mobile. Navigation, native FAQ disclosures, keyboard focus, skip link, reduced-motion support and 44px-high navigation controls target WCAG 2.2 AA. Hashed Vite assets retain immutable caching; named image derivatives revalidate after one day. Store badges remain non-interactive and explicitly say Coming soon / Próximamente.
+
+The product positioning and cultural direction follow the redesign brief. Detailed feature specifications, compatibility, release dates, support channels and store links remain unconfirmed and are not fabricated. Publication still requires separate authorization.
 
 ## Validation
 
@@ -70,7 +70,7 @@ npm run test:performance
 npm run format:check
 ```
 
-The Node suite checks generated HTML, localized metadata, canonical/hreflang, sitemap entries, internal links, JSON-LD, missing download links, noindex 404s, Cloudflare configuration, CSP and image size budgets. Playwright tests all ten pages on desktop and mobile Chromium with axe WCAG A/AA scans, verifies switching languages, keyboard FAQ operation, mobile navigation, 320px layout, enlarged text, no-JavaScript content, redirects and HTTP 404s against local Wrangler. Browser reports and screenshots stay local in `test-results/`.
+The Node suite checks generated HTML, localized metadata, canonical/hreflang, sitemap entries, internal links, JSON-LD, missing download links, noindex 404s, Cloudflare configuration, CSP and image size budgets. Playwright tests all ten pages on desktop and mobile Chromium with axe WCAG 2.0/2.1/2.2 A/AA scans, verifies switching languages, keyboard FAQ operation, mobile navigation, 320px layout, enlarged text, no-JavaScript content, redirects and HTTP 404s against local Wrangler. Browser reports and screenshots stay local in `test-results/`.
 
 Lab performance is not field Core Web Vitals. Field LCP/INP/CLS require real traffic after a separately authorized launch.
 
@@ -78,12 +78,13 @@ Lab performance is not field Core Web Vitals. Field LCP/INP/CLS require real tra
 
 ## Files
 
-- `src/App.tsx`: responsive pages, navigation, store badges, original SVG art.
+- `src/App.tsx`: responsive pages, navigation, store badges, responsive pigeon photography and the official logo.
 - `src/content.ts`, `src/i18n.ts`: bilingual copy, route mapping and i18next.
 - `src/styles.css`: Tailwind entry and visual system.
 - `src/main.tsx`, `src/entry-server.tsx`: hydration and static server rendering.
 - `scripts/prerender.mjs`: static documents, SEO and social assets.
-- `public/`: development favicon, redirects and security/cache header templates.
+- `scripts/prepare-assets.mjs`: repeatable image optimization from the maintained originals.
+- `public/`: official brand source assets, optimized image derivatives, favicons, redirects and security/cache header templates.
 - `wrangler.jsonc`: Workers Static Assets configuration.
 - `tests/`, `playwright.config.ts`: static and browser verification.
 

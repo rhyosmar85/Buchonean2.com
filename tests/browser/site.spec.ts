@@ -19,13 +19,15 @@ for (const locale of ['es', 'en'] as const) {
       await expect(page.locator('html')).toHaveAttribute('lang', locale)
       expect(
         await page.evaluate(
-          () => document.documentElement.scrollWidth <= innerWidth,
+          () =>
+            document.documentElement.scrollWidth <=
+            document.documentElement.clientWidth,
         ),
       ).toBe(true)
       expect(
         (
           await new AxeBuilder({ page })
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
             .analyze()
         ).violations,
       ).toEqual([])
@@ -78,6 +80,17 @@ test('Cloudflare redirects and genuine localized 404 responses', async ({
   const slash = await request.get('/en/features', { maxRedirects: 0 })
   expect([301, 307, 308]).toContain(slash.status())
   expect(slash.headers().location).toMatch(/\/en\/features\/$/)
+  const image = await request.get('/assets/images/palomean-flight-480.avif')
+  expect(image.status()).toBe(200)
+  expect(image.headers()['cache-control']).toContain('max-age=86400')
+  expect(image.headers()['cache-control']).not.toContain('immutable')
+  const html = await (await request.get('/es/')).text()
+  const stylesheet = html.match(/href="(\/build-assets\/[^\"]+\.css)"/)?.[1]
+  expect(stylesheet).toBeTruthy()
+  const css = await request.get(stylesheet!)
+  expect(css.headers()['cache-control']).toContain(
+    'max-age=31536000, immutable',
+  )
   for (const locale of ['es', 'en']) {
     const missing = await request.get(`/${locale}/does-not-exist/`)
     expect(missing.status()).toBe(404)
@@ -119,7 +132,7 @@ test('320px screen, large text and reduced motion retain usable content', async 
     ),
   ).toBe(true)
   await page.evaluate(() => {
-    document.documentElement.style.fontSize = '125%'
+    document.documentElement.style.fontSize = '200%'
   })
   expect(
     await page.evaluate(
@@ -128,4 +141,60 @@ test('320px screen, large text and reduced motion retain usable content', async 
         document.documentElement.clientWidth,
     ),
   ).toBe(true)
+})
+
+test('tablet layouts retain navigation and translated content', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 1024 })
+  for (const locale of ['es', 'en'] as const) {
+    for (const route of pages) {
+      await page.goto(paths[locale][route])
+      await page.evaluate(() => document.fonts.ready)
+      await expect(page.locator('.language-switch')).toBeVisible()
+      expect(
+        await page.evaluate(
+          () =>
+            document.documentElement.scrollWidth <=
+            document.documentElement.clientWidth,
+        ),
+      ).toBe(true)
+    }
+  }
+})
+
+test('hero images load and navigation supports keyboard dismissal', async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto('/es/')
+  const photo = page.locator('.hero-visual img')
+  await expect(photo).toBeVisible()
+  await expect(photo).toHaveAttribute('alt', /Paloma/)
+  expect(
+    await photo.evaluate(
+      (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+    ),
+  ).toBe(true)
+  expect(
+    await page
+      .locator('.brand img')
+      .first()
+      .evaluate(
+        (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
+      ),
+  ).toBe(true)
+  for (const link of await page.locator('.language-switch a').all()) {
+    const box = await link.boundingBox()
+    expect(box?.height).toBeGreaterThanOrEqual(44)
+    expect(box?.width).toBeGreaterThanOrEqual(24)
+  }
+  if (isMobile) {
+    const menu = page.getByRole('button', { name: 'Abrir menú' })
+    await menu.click()
+    await page.locator('#mobile-nav a').first().focus()
+    await page.keyboard.press('Escape')
+    await expect(menu).toBeFocused()
+    await expect(menu).toHaveAttribute('aria-expanded', 'false')
+  }
 })

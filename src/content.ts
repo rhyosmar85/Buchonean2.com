@@ -52,40 +52,46 @@ export const content = {
     explore: 'Conoce Buchonean2',
     discover: 'Descubre la comunidad',
     hero: {
-      title: 'Hay pasiones que nos acercan.',
-      body: 'Un nuevo capítulo para Buchonean2. Un espacio para nuestra comunidad, con mucho por compartir.',
-      tag: 'Lo que viene se vive en comunidad.',
-      caption: 'Cada conexión es el comienzo de algo.',
-      captionSmall: 'Ilustración conceptual',
+      title: 'Tu palomar. Tu legado. Tu pasión.',
+      lines: ['Tu palomar.', 'Tu legado.', 'Tu pasión.'],
+      body: 'Cada paloma tiene su historia. Cada palomero, su orgullo. Lleva el control de tu palomar con Buchonean2.',
+      tag: 'Hecho para palomeros',
+      caption: 'La pasión se lleva en el vuelo.',
+      captionSmall: 'Buchonean2',
+      photoAlt:
+        'Paloma de plumaje oscuro en pleno vuelo, con las alas extendidas y la cola abierta contra el cielo azul.',
+      signature: 'Orgullo palomero. Pasión compartida.',
+      signatureEnd: 'Del palomar al próximo vuelo.',
     },
     intro: {
-      title: 'Una misma pasión. Nuevas conexiones.',
-      body: 'Estamos preparando el siguiente paso de Buchonean2. Aquí podrás conocer el proyecto, consultar las novedades confirmadas y encontrar respuestas antes del lanzamiento.',
+      title: 'Más que una afición. Una forma de vivir.',
+      body: 'Las horas en el palomar. La atención a cada ejemplar. El orgullo de verlo volar. Buchonean2 nace para acompañar esa dedicación y conectar a quienes la comparten.',
     },
     pillars: [
       {
-        title: 'Un punto de encuentro',
-        body: 'Conoce el espacio dedicado a la comunidad Buchonean2.',
+        title: 'De palomero a palomero',
+        body: 'Una pasión que se comparte entre criadores, conversaciones y generaciones.',
         link: 'Explorar comunidad',
       },
       {
-        title: 'Lo que viene',
-        body: 'Consulta el estado de las funciones y lo que está por anunciarse.',
+        title: 'Tu palomar, presente',
+        body: 'Conoce la visión de Buchonean2 y consulta los próximos detalles de la aplicación.',
         link: 'Ver funciones',
       },
       {
-        title: 'Respuestas claras',
+        title: 'Sin quedarte con la duda',
         body: 'Información sobre disponibilidad, idiomas y próximos anuncios.',
         link: 'Resolver mis dudas',
       },
     ],
     communityTeaser: {
-      title: 'La comunidad empieza con nosotros.',
-      body: 'La curiosidad, el respeto y las ganas de compartir nos acercan. Conoce la visión detrás de este nuevo capítulo.',
+      title: 'El orgullo de ser palomero.',
+      body: 'De Cuba a cada rincón de nuestra comunidad hispana, el palomar es un lugar de encuentro. Aquí caben las historias, el conocimiento y el respeto por una pasión que cruza fronteras.',
       link: 'Nuestra comunidad',
+      emblem: 'Una pasión que nos representa.',
     },
     availability: {
-      title: 'El próximo capítulo, en tu bolsillo.',
+      title: 'Tu pasión siempre contigo.',
       body: 'Buchonean2 llegará a App Store y Google Play. La fecha de lanzamiento todavía no está confirmada.',
       note: 'Las descargas aún no están disponibles.',
     },
@@ -118,7 +124,7 @@ export const content = {
       },
     ],
     features: {
-      title: 'Un vistazo a lo que viene.',
+      title: 'El próximo paso para tu palomar.',
       intro:
         'Estamos preparando el próximo capítulo de Buchonean2. Las funciones se presentarán aquí cuando estén confirmadas.',
       heading: 'Información clara, desde el principio.',
@@ -131,22 +137,22 @@ export const content = {
       ],
     },
     community: {
-      title: 'Lo mejor empieza al conectar.',
+      title: 'Palomeros. Una pasión sin fronteras.',
       intro:
-        'Buchonean2 tiene a su comunidad en el centro. Este espacio presenta los valores que queremos compartir.',
-      heading: 'Un espacio para compartir con respeto.',
+        'De Cuba a la comunidad hispana en todo el mundo. Nos unen la dedicación al palomar, el conocimiento compartido y el orgullo por nuestros ejemplares.',
+      heading: 'El legado también se comparte.',
       values: [
         {
           title: 'Respeto',
           body: 'Detrás de cada conversación hay una persona. Escuchar y tratar bien a los demás es nuestro punto de partida.',
         },
         {
-          title: 'Curiosidad',
-          body: 'Siempre hay algo nuevo por aprender. Las preguntas y las distintas perspectivas enriquecen una comunidad.',
+          title: 'Conocimiento',
+          body: 'Cada generación tiene algo que enseñar y algo que aprender. Compartir experiencias mantiene viva nuestra afición.',
         },
         {
-          title: 'Conexión',
-          body: 'Las pasiones compartidas abren conversaciones. Queremos dar lugar a esos encuentros.',
+          title: 'Dedicación',
+          body: 'El cuidado diario de las palomas y la atención al palomar son parte del orgullo que compartimos.',
         },
       ],
       note: 'Los canales oficiales y las normas de participación se publicarán cuando estén confirmados.',
@@ -168,10 +174,10 @@ export const content = {
         'Próximamente en App Store y Google Play. Sin fecha de lanzamiento confirmada.',
     },
     footer: {
-      line: 'Una comunidad. Un nuevo capítulo.',
-      note: 'Sitio en desarrollo: identidad visual y contenido provisional sujetos a validación. El texto de marca sustituye temporalmente al logotipo oficial.',
+      line: 'Tu palomar. Tu legado. Tu pasión.',
+      note: 'Próximamente en App Store y Google Play. Sin fecha de lanzamiento confirmada.',
       rights: 'Buchonean2',
-      brand: 'Marca tipográfica provisional',
+      brand: 'Logotipo oficial de Buchonean2',
     },
     notFound: {
       title: 'Esta página no está aquí.',
@@ -180,9 +186,9 @@ export const content = {
     },
     meta: {
       home: {
-        title: 'Buchonean2 | Una comunidad, un nuevo capítulo',
+        title: 'Buchonean2 | Tu palomar. Tu legado. Tu pasión.',
         description:
-          'Conoce Buchonean2, explora su comunidad y resuelve tus dudas. Próximamente en App Store y Google Play, sin fecha de lanzamiento confirmada.',
+          'Buchonean2, la próxima aplicación para tu palomar y la comunidad palomera. Tu legado y tu pasión, siempre contigo. Próximamente en iOS y Android.',
       },
       features: {
         title: 'Funciones de Buchonean2 | Información y novedades',
@@ -190,9 +196,9 @@ export const content = {
           'Consulta el estado de las funciones de Buchonean2. Los detalles de la aplicación se publicarán cuando estén confirmados.',
       },
       community: {
-        title: 'Comunidad Buchonean2 | Conectar y compartir',
+        title: 'Comunidad palomera | Buchonean2',
         description:
-          'Descubre la visión de la comunidad Buchonean2: respeto, curiosidad y conexión. Conoce este nuevo capítulo del proyecto.',
+          'Conoce la comunidad palomera de Buchonean2. Criadores de Cuba y de la comunidad hispana unidos por el respeto, la dedicación y las palomas buchonas.',
       },
       faq: {
         title: 'Preguntas frecuentes | Buchonean2',
@@ -222,25 +228,30 @@ export const content = {
     explore: 'Meet Buchonean2',
     discover: 'Discover the community',
     hero: {
-      title: 'Shared passions bring us closer.',
-      body: 'A new chapter for Buchonean2. A space for our community, with so much to share.',
-      tag: 'What comes next starts with community.',
-      caption: 'Every connection starts something.',
-      captionSmall: 'Concept illustration',
+      title: 'Your Loft. Your Legacy. Your Passion.',
+      lines: ['Your Loft.', 'Your Legacy.', 'Your Passion.'],
+      body: 'Every pigeon has a story. Every breeder takes pride in theirs. Manage your loft with Buchonean2.',
+      tag: 'Made for pigeon breeders',
+      caption: 'Passion takes flight.',
+      captionSmall: 'Buchonean2',
+      photoAlt:
+        'A dark-feathered pigeon in flight, wings spread and tail fanned against a blue sky.',
+      signature: 'Proud breeders. Shared passion.',
+      signatureEnd: 'From your loft to the next flight.',
     },
     intro: {
-      title: 'One shared passion. New connections.',
-      body: 'We’re preparing the next step for Buchonean2. Get to know the project, find confirmed updates and get answers before launch.',
+      title: 'More than a hobby. A way of life.',
+      body: 'Hours in the loft. Care for every bird. The pride of watching them fly. Buchonean2 is built around that dedication and the people who share it.',
     },
     pillars: [
       {
-        title: 'A place to meet',
-        body: 'Get to know the space dedicated to the Buchonean2 community.',
+        title: 'Breeder to breeder',
+        body: 'A passion passed between breeders, through conversations and across generations.',
         link: 'Explore the community',
       },
       {
-        title: 'What comes next',
-        body: 'Check the status of features and what has yet to be announced.',
+        title: 'Your loft comes first',
+        body: 'Explore the vision for Buchonean2 and find upcoming details about the app.',
         link: 'Explore features',
       },
       {
@@ -250,12 +261,13 @@ export const content = {
       },
     ],
     communityTeaser: {
-      title: 'Community starts with us.',
-      body: 'Curiosity, respect and a willingness to share bring us together. Discover the vision behind this new chapter.',
+      title: 'Proud to be a pigeon breeder.',
+      body: 'From Cuba to Hispanic communities around the world, the loft brings people together. Share the stories, knowledge and respect behind a passion that crosses borders.',
       link: 'Our community',
+      emblem: 'A passion we call our own.',
     },
     availability: {
-      title: 'The next chapter, in your pocket.',
+      title: 'Keep your passion close.',
       body: 'Buchonean2 is coming to the App Store and Google Play. A launch date has not been confirmed.',
       note: 'Downloads are not available yet.',
     },
@@ -288,7 +300,7 @@ export const content = {
       },
     ],
     features: {
-      title: 'A look at what’s ahead.',
+      title: 'The next chapter for your loft.',
       intro:
         'We’re preparing the next chapter of Buchonean2. Features will be introduced here once they are confirmed.',
       heading: 'Clear information, from the start.',
@@ -301,22 +313,22 @@ export const content = {
       ],
     },
     community: {
-      title: 'Good things start with connection.',
+      title: 'Pigeon breeders. Passion without borders.',
       intro:
-        'Community is at the heart of Buchonean2. This space introduces the values we want to share.',
-      heading: 'A place to share with respect.',
+        'From Cuba to Hispanic communities worldwide. We share a dedication to our lofts, a wealth of knowledge and pride in our birds.',
+      heading: 'A legacy worth sharing.',
       values: [
         {
           title: 'Respect',
           body: 'There is a person behind every conversation. Listening and treating each other well is where we start.',
         },
         {
-          title: 'Curiosity',
-          body: 'There is always something new to learn. Questions and different perspectives enrich a community.',
+          title: 'Knowledge',
+          body: 'Every generation has something to teach and something to learn. Sharing experience keeps our passion alive.',
         },
         {
-          title: 'Connection',
-          body: 'Shared passions open conversations. We want to make room for those connections.',
+          title: 'Dedication',
+          body: 'The daily care of our pigeons and attention to our lofts are part of the pride we share.',
         },
       ],
       note: 'Official channels and participation guidelines will be published once confirmed.',
@@ -337,10 +349,10 @@ export const content = {
         'Coming soon to the App Store and Google Play. No confirmed launch date.',
     },
     footer: {
-      line: 'One community. A new chapter.',
-      note: 'Development site: visual identity and draft content await approval. A temporary wordmark stands in for the official logo.',
+      line: 'Your Loft. Your Legacy. Your Passion.',
+      note: 'Coming soon to the App Store and Google Play. No confirmed launch date.',
       rights: 'Buchonean2',
-      brand: 'Temporary wordmark',
+      brand: 'Official Buchonean2 logo',
     },
     notFound: {
       title: 'This page isn’t here.',
@@ -349,9 +361,9 @@ export const content = {
     },
     meta: {
       home: {
-        title: 'Buchonean2 | One community, a new chapter',
+        title: 'Buchonean2 | Your Loft. Your Legacy. Your Passion.',
         description:
-          'Meet Buchonean2, explore the community and find answers. Coming soon to the App Store and Google Play, with no confirmed launch date.',
+          'Meet Buchonean2, the upcoming app for your pigeon loft and breeding community. Keep your legacy and passion close. Coming soon to iOS and Android.',
       },
       features: {
         title: 'Buchonean2 Features | Information and updates',
@@ -359,9 +371,9 @@ export const content = {
           'Check the status of Buchonean2 features. App details will be published once they have been confirmed.',
       },
       community: {
-        title: 'Buchonean2 Community | Connect and share',
+        title: 'Pigeon Breeding Community | Buchonean2',
         description:
-          'Discover the vision for the Buchonean2 community: respect, curiosity and connection. Get to know the next chapter of the project.',
+          'Meet the Buchonean2 pigeon breeding community. Breeders from Cuba and Hispanic communities sharing respect, dedication and a passion for buchón pigeons.',
       },
       faq: {
         title: 'Frequently asked questions | Buchonean2',

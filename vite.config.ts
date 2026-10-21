@@ -4,5 +4,5 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  build: { target: 'es2022', sourcemap: false },
+  build: { target: 'es2022', sourcemap: false, assetsDir: 'build-assets' },
 })

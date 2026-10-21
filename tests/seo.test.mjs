@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile, stat } from 'node:fs/promises'
 import { load } from 'cheerio'
+import sharp from 'sharp'
 import { paths, pages, content } from '../.prerender/entry-server.js'
 
 const origin = new URL(process.env.SITE_URL || 'https://buchonean2.com').origin
@@ -99,5 +100,31 @@ test('Cloudflare static routing, headers and image budget', async () => {
   assert.ok(headers.includes("'sha256-"))
   assert.ok(headers.includes('max-age=31536000, immutable'))
   for (const locale of ['es', 'en'])
-    assert.ok((await stat(`dist/social-${locale}.png`)).size < 150_000)
+    assert.ok((await stat(`dist/social-${locale}.jpg`)).size < 150_000)
+})
+
+test('official source assets survive a clean build and delivery images are optimized', async () => {
+  for (const file of ['palomean2_image1.jpg', 'Buchonean2_logo.png']) {
+    assert.deepEqual(
+      await readFile(`public/assets/source/${file}`),
+      await readFile(`dist/assets/source/${file}`),
+    )
+  }
+  for (const width of [480, 768, 1024]) {
+    const file = `dist/assets/images/palomean-flight-${width}.avif`
+    assert.equal((await sharp(file).metadata()).width, width)
+    assert.ok((await stat(file)).size < 100_000)
+  }
+  assert.ok(
+    (await stat('dist/assets/images/buchonean2-logo-64.webp')).size < 8_000,
+  )
+  const $ = load(await readFile('dist/es/index.html', 'utf8'))
+  const hero = $('.hero-visual img')
+  assert.equal(hero.attr('fetchpriority'), 'high')
+  assert.equal(hero.attr('loading'), 'eager')
+  assert.ok(hero.attr('alt').length > 30)
+  assert.equal(hero.attr('width'), '1024')
+  assert.equal(hero.attr('height'), '654')
+  assert.equal($('.hero-visual source[type="image/avif"]').length, 1)
+  assert.ok($('.brand img').first().attr('src').includes('buchonean2-logo'))
 })
