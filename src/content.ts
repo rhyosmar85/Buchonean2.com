@@ -114,7 +114,8 @@ export const anchors: Record<Locale, Record<ModuleId, string>> = {
 // Real app screens, rendered from the Flutter app with test data and fitted to
 // the iPhone screen area below the status bar (393 x 798 pt). `status` is the
 // app bar tone at the top of each screen, continued under the status bar.
-export type ScreenId = 'pigeon' | 'breeding' | 'flight' | 'profile'
+// `device` screens are full iPhone screenshots that keep their own status bar.
+export type ScreenId = 'pigeon' | 'breeding' | 'flight' | 'profile' | 'loft'
 type Tone = 'light' | 'dark'
 const light: Tone = 'light'
 export const screens: Record<
@@ -123,6 +124,7 @@ export const screens: Record<
     widths: number[]
     file: Record<Locale, string>
     status: Record<Locale, Tone>
+    device?: boolean
   }
 > = {
   pigeon: {
@@ -145,6 +147,12 @@ export const screens: Record<
     file: { es: 'profile-es', en: 'profile-en' },
     status: { es: light, en: light },
   },
+  loft: {
+    widths: [400, 640, 860],
+    file: { es: 'profile-device-es', en: 'profile-device-es' },
+    status: { es: light, en: light },
+    device: true,
+  },
 }
 
 export type GroupMedia =
@@ -163,12 +171,8 @@ export const groupLayout: { modules: ModuleId[]; media: GroupMedia }[] = [
   },
   { modules: ['health'], media: { kind: 'care' } },
   {
-    modules: ['community', 'nearby', 'rankings'],
+    modules: ['community', 'nearby', 'rankings', 'stores'],
     media: { kind: 'photo', id: 'flight' },
-  },
-  {
-    modules: ['stores', 'sale', 'privacy'],
-    media: { kind: 'screen', id: 'profile' },
   },
 ]
 export const moduleScreen: Partial<Record<ModuleId, ScreenId>> = {
@@ -245,13 +249,32 @@ const es = {
     },
     {
       title: 'La comunidad palomera.',
-      body: 'Comparte solo lo que tú decidas, descubre palomares cerca de ti y sigue las capturas y la clasificación de tu zona.',
-    },
-    {
-      title: 'Todo a tu alcance.',
-      body: 'Encuentra tiendas cerca de tu palomar, ofrece las palomas que tienes en venta y decide qué es privado y qué es público.',
+      body: 'Comparte solo lo que tú decidas, descubre palomares y tiendas cerca de ti y sigue las capturas y la clasificación de tu zona.',
     },
   ],
+  loft: {
+    title: 'Tu palomar. Tus reglas.',
+    body: 'Personaliza tu perfil, administra tus anuncios y decide qué información de tu palomar y tus capturas compartes con la comunidad.',
+    items: [
+      {
+        title: 'Perfil público',
+        body: 'El nombre, el perfil y el logo de tu palomar solo se ven si activas el perfil público, y antes de publicarlo la app te dice qué verán los demás.',
+      },
+      {
+        title: 'Mis anuncios',
+        body: 'Elige qué palomas ofrecer en venta. Cada anuncio empieza como borrador privado y se publica por separado.',
+      },
+      {
+        title: 'Capturas públicas',
+        body: 'Tus capturas se comparten con la comunidad solo si activas esta opción. Puedes desactivarla cuando quieras.',
+      },
+      {
+        title: 'Controles de privacidad',
+        body: 'Perfil, palomas, capturas, anuncios y ubicación tienen cada uno su propio ajuste. Nada se publica de forma automática.',
+      },
+    ],
+    note: 'El perfil público y las capturas públicas vienen desactivados. En la captura están activados porque ese palomero eligió compartirlos.',
+  },
   details: 'Ver detalles',
   care: {
     title: 'Tipos de cuidado que registras',
@@ -276,7 +299,9 @@ const es = {
       'Pantalla de entrenamiento con la paloma Gavino en vuelo: 18:41 de tiempo restante sobre 30:00 programados y el botón «Ya entró».',
     profile:
       'Pantalla Perfil de la app con el nombre del palomar, el interruptor de perfil público, los anuncios y las capturas públicas.',
+    loft: 'Pantalla Perfil en un iPhone del palomar SamuraiX en Cape Coral, Florida: Editar perfil y Ver perfil público, el nombre del palomar, el interruptor de Perfil público activado, Mis anuncios y el interruptor de Capturas públicas activado.',
   },
+  deviceCaption: 'Captura real de la app en desarrollo, tomada en un iPhone.',
   statusLabel: { development: 'En desarrollo', planned: 'Planificado' },
   statusLegend: [
     {
@@ -661,13 +686,32 @@ const en: Copy = {
     },
     {
       title: 'The breeder community.',
-      body: 'Share only what you choose, discover lofts near you and follow the captures and rankings in your area.',
-    },
-    {
-      title: 'Everything within reach.',
-      body: 'Find stores near your loft, offer the pigeons you have for sale and decide what stays private and what is public.',
+      body: 'Share only what you choose, discover lofts and stores near you and follow the captures and rankings in your area.',
     },
   ],
+  loft: {
+    title: 'Your Loft. Your Rules.',
+    body: 'Customize your profile, manage your listings, and control what you share about your loft and captures with the community.',
+    items: [
+      {
+        title: 'Public profile',
+        body: 'Your loft name, profile and logo are only visible if you turn on your public profile, and before it goes public the app tells you what others will see.',
+      },
+      {
+        title: 'My listings',
+        body: 'Choose which pigeons to offer for sale. Each listing starts as a private draft and is published separately.',
+      },
+      {
+        title: 'Public captures',
+        body: 'Your captures are shared with the community only if you turn this on. You can turn it off anytime.',
+      },
+      {
+        title: 'Privacy controls',
+        body: 'Profile, pigeons, captures, listings and location each have their own setting. Nothing is published automatically.',
+      },
+    ],
+    note: 'Public profile and public captures start turned off. They are on in this screenshot because that breeder chose to share them.',
+  },
   details: 'See details',
   care: {
     title: 'Types of care you record',
@@ -687,7 +731,10 @@ const en: Copy = {
       'The Spanish training screen with the pigeon Gavino in flight: 18:41 remaining of a planned 30:00 and the button marking that it is back.',
     profile:
       'The app’s Profile screen with the loft name, the public profile switch, listings and public captures.',
+    loft: 'Spanish Profile screen on an iPhone for the loft SamuraiX in Cape Coral, Florida: Edit profile and View public profile, the loft name, the Public profile switch turned on, My listings, and the Public captures switch turned on.',
   },
+  deviceCaption:
+    'Actual screenshot of the in-development app on an iPhone, in Spanish.',
   statusLabel: { development: 'In development', planned: 'Planned' },
   statusLegend: [
     {

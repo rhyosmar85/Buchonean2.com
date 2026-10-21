@@ -4,6 +4,22 @@ import { content, screens, type Locale, type ScreenId } from './content'
 // is the status bar around the Dynamic Island. App screens fill the rest.
 const SCREEN_W = 393
 const CONTENT_H = 798
+const SCREEN_H = 852
+
+// A full device screenshot already has its own status bar; only the Dynamic
+// Island (which iOS leaves out of screenshots) is drawn over it.
+function Island() {
+  return (
+    <svg
+      className="phone-island"
+      viewBox="0 0 393 54"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect x="134" y="11" width="125" height="36" rx="18" fill="#000" />
+    </svg>
+  )
+}
 
 function StatusBar({ dark }: { dark: boolean }) {
   const ink = dark ? '#f4f6f4' : '#0b0c0c'
@@ -63,6 +79,7 @@ export function PhoneMockup({
   const file = screen.file[locale]
   const tone = screen.status[locale]
   const widest = screen.widths[screen.widths.length - 1]
+  const height = screen.device ? SCREEN_H : CONTENT_H
   const set = (format: string) =>
     screen.widths
       .map((w) => `/assets/images/screens/${file}-${w}.${format} ${w}w`)
@@ -71,7 +88,7 @@ export function PhoneMockup({
     <div className="phone">
       <div className="phone-body">
         <div className={`phone-screen tone-${tone}`}>
-          <StatusBar dark={tone === 'dark'} />
+          {!screen.device && <StatusBar dark={tone === 'dark'} />}
           <picture>
             <source type="image/avif" srcSet={set('avif')} sizes={sizes} />
             <img
@@ -79,12 +96,13 @@ export function PhoneMockup({
               srcSet={set('webp')}
               sizes={sizes}
               width={widest}
-              height={Math.round((widest * CONTENT_H) / SCREEN_W)}
+              height={Math.round((widest * height) / SCREEN_W)}
               alt={content[locale].screenAlt[id]}
               loading={eager ? 'eager' : 'lazy'}
               decoding="async"
             />
           </picture>
+          {screen.device && <Island />}
           <span className="phone-home" aria-hidden="true" />
         </div>
       </div>
@@ -104,12 +122,17 @@ export function AppShowcase({
   sizes?: string
 }) {
   const c = content[locale]
-  const spanishOnly = locale === 'en' && screens[id].file.en.endsWith('-es')
+  const screen = screens[id]
+  const spanishOnly = locale === 'en' && screen.file.en.endsWith('-es')
   return (
     <figure className="app-showcase">
       <PhoneMockup id={id} locale={locale} sizes={sizes} />
       <figcaption>
-        {spanishOnly ? c.screenCaptionEs : c.screenCaption}
+        {screen.device
+          ? c.deviceCaption
+          : spanishOnly
+            ? c.screenCaptionEs
+            : c.screenCaption}
       </figcaption>
     </figure>
   )

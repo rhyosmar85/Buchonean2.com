@@ -190,7 +190,9 @@ test('app screens are always shown in the shared iPhone mockup with responsive i
       assert.equal($('img[src*="/screens/"]').length, $('.phone img').length)
       $('.phone').each((_, phone) => {
         const img = $(phone).find('img')
-        assert.equal($(phone).find('.phone-status').length, 1)
+        // Rendered screens get a drawn status bar; device screenshots keep
+        // their own and only get the Dynamic Island.
+        assert.equal($(phone).find('.phone-status, .phone-island').length, 1)
         assert.equal($(phone).find('source[type="image/avif"]').length, 1)
         assert.ok(
           img.attr('srcset').includes('w,') || img.attr('srcset').endsWith('w'),
@@ -205,5 +207,23 @@ test('app screens are always shown in the shared iPhone mockup with responsive i
         assert.ok($(figure).find('figcaption').text().length > 20),
       )
     }
+  }
+})
+
+test('home has a dedicated profile and privacy section on the real device screenshot', async () => {
+  for (const locale of ['es', 'en']) {
+    const $ = load(
+      await readFile(`dist${paths[locale].home}index.html`, 'utf8'),
+    )
+    const section = $('section.loft')
+    assert.equal(section.length, 1)
+    assert.equal(
+      section.find('h2').text(),
+      locale === 'es' ? 'Tu palomar. Tus reglas.' : 'Your Loft. Your Rules.',
+    )
+    assert.equal(section.find('.loft-controls li').length, 4)
+    assert.equal(section.find('.phone-island').length, 1)
+    assert.ok(section.find('img').attr('src').includes('profile-device-es-860'))
+    assert.ok(section.find('.module-note').text().length > 40)
   }
 })

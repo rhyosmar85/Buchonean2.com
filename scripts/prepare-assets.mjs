@@ -37,7 +37,8 @@ for (const width of [640, 960, 1350]) {
 // Each is fitted to the iPhone 15/16 Pro screen below the status bar
 // (393 x 798 pt) without altering the interface: either rows are removed from
 // a band that is completely empty background (keeping the bottom tab bar), or
-// the bottom is trimmed like a scrolled screen.
+// the bottom is trimmed like a scrolled screen. Device screenshots keep their
+// own status bar and are fitted to the whole screen (393 x 852 pt).
 await rm(`${directory}/images/screens`, { recursive: true, force: true })
 await mkdir(`${directory}/images/screens`, { recursive: true })
 const screens = {
@@ -48,11 +49,12 @@ const screens = {
   'flight-es': { widths: [390] },
   'profile-es': { widths: [320] },
   'profile-en': { widths: [320] },
+  'profile-device-es': { device: true, widths: [400, 640, 860] },
 }
 for (const [name, fit] of Object.entries(screens)) {
   const file = `${directory}/source/screens/${name}.png`
   const { width, height } = await sharp(file).metadata()
-  const target = Math.round((width * 798) / 393)
+  const target = Math.round((width * (fit.device ? 852 : 798)) / 393)
   const removed = height - target
   let screen
   if (fit.removeAt) {

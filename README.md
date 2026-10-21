@@ -61,6 +61,7 @@ Maintained originals live in `public/assets/source/` and are never modified:
 - `Buchonean2_logo.png`, `palomean2_image1.jpg` (original site assets)
 - `buchonean2_buchon.png`, byte-identical to the app's approved sign-in photograph (`buchonean2_assets/buchonean2_hero.png` in the app repository)
 - `screens/*.png`, real app screens rendered by the app's own UI tests with test data, copied from the app repository's `docs/` folders. `scripts/prepare-assets.mjs` fits each one to the iPhone 15/16 Pro screen below the status bar (393 × 798 pt) by removing rows from a completely empty background band (pigeon and breeding screens, so the tab bar stays) or trimming the bottom like a scrolled screen (flight and profile). Nothing inside the interface is altered.
+- `screens/profile-device-es.png`, a real iPhone screenshot of the Profile screen supplied by the owner (1260 × 2736). It keeps its own status bar, so it is fitted to the whole screen (393 × 852 pt, trimming 4 px of empty background at the bottom) and the mockup only draws the Dynamic Island over it. It is shown in the home page's "Tu palomar. Tus reglas." section.
 
 App screens are only ever shown through `src/PhoneMockup.tsx`: `PhoneMockup` draws a graphite iPhone (titanium band, black bezel, side buttons, Dynamic Island status bar matched to the screen's light or dark app bar, home indicator), sized entirely from `--phone-w`; `AppShowcase` places it on the shared soft stage with the standard caption. It is CSS-only (no inline styles, so the CSP is unchanged) and serves responsive AVIF/WebP `srcset`s.
 

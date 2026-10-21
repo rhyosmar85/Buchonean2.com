@@ -6,6 +6,7 @@ import {
   Droplets,
   Egg,
   Flag,
+  Globe,
   HeartPulse,
   MapPin,
   Menu,
@@ -56,6 +57,8 @@ const moduleIcons: Record<ModuleId, LucideIcon> = {
   privacy: ShieldCheck,
 }
 const careIcons = [Syringe, Pill, Droplets, Stethoscope]
+// Same order as the rows on the app's Profile screen.
+const loftIcons = [Globe, Tag, Flag, ShieldCheck]
 
 function moduleHref(locale: Locale, id: ModuleId) {
   return `${paths[locale].features}#${anchors[locale][id]}`
@@ -345,6 +348,43 @@ function Home({ locale }: { locale: Locale }) {
           </section>
         )
       })}
+
+      <section
+        className="showcase is-reversed loft"
+        aria-labelledby="loft-title"
+      >
+        <div className="container showcase-inner">
+          <div className="showcase-copy">
+            <h2 id="loft-title">{c.loft.title}</h2>
+            <p className="lead">{c.loft.body}</p>
+            <ul className="loft-controls">
+              {c.loft.items.map((item, i) => {
+                const Icon = loftIcons[i]
+                return (
+                  <li key={item.title}>
+                    <Icon size={20} aria-hidden="true" />
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+            <p className="module-note">{c.loft.note}</p>
+            <p className="loft-links">
+              {(['privacy', 'sale'] as const).map((id) => (
+                <a key={id} className="text-link" href={moduleHref(locale, id)}>
+                  {c.modules[id].name}
+                </a>
+              ))}
+            </p>
+          </div>
+          <div className="showcase-media media-screen">
+            <AppShowcase id="loft" locale={locale} />
+          </div>
+        </div>
+      </section>
 
       <section className="section today" aria-labelledby="today-title">
         <div className="container">
